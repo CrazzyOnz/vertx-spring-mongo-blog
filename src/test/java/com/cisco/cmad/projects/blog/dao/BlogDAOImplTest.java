@@ -13,7 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.cisco.cmad.projects.blog.config.SpringConfigurationTest;
-import com.cisco.cmad.projects.blog.dto.Blog;
+import com.cisco.cmad.projects.blog.dto.Post;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=SpringConfigurationTest.class)
@@ -26,76 +26,76 @@ public class BlogDAOImplTest {
 	
 	@Test
 	public void createBlogTest() {
-		Blog blog = new Blog("My First blog","Some content","admin");
+		Post blog = new Post("My First blog","Some content","admin");
 		Assert.assertTrue(blogDao.createBlog(blog));
-		Blog blog2 = blogDao.getBlogById(blog.getId()).get();
-		Assert.assertEquals(blog.getId(), blog2.getId());
+		Post blog2 = blogDao.getBlogById(blog.get_id()).get();
+		Assert.assertEquals(blog.get_id(), blog2.get_id());
 		Assert.assertEquals(blog.getTitle(), blog2.getTitle());
-		Assert.assertTrue(blogDao.deleteBlogById(blog.getId()));
-		Assert.assertFalse(blogDao.getBlogById(blog.getId()).isPresent());
+		Assert.assertTrue(blogDao.deleteBlogById(blog.get_id()));
+		Assert.assertFalse(blogDao.getBlogById(blog.get_id()).isPresent());
 	}
 	
 	@Test
 	public void setFavouriteTest() {
-		Blog blog = new Blog("My First blog","Some content","admin");
+		Post blog = new Post("My First blog","Some content","admin");
 		blog.setFavorite(false);
 		blogDao.createBlog(blog);
-		blogDao.setFavourite(blog.getId(), true);
-		Blog blog2 = blogDao.getBlogById(blog.getId()).get();
+		blogDao.setFavourite(blog.get_id(), true);
+		Post blog2 = blogDao.getBlogById(blog.get_id()).get();
 		Assert.assertTrue(blog2.isFavorite());
-		blogDao.deleteBlogById(blog.getId());
-		Assert.assertTrue(blogDao.deleteBlogById(blog.getId()));
-		Assert.assertFalse(blogDao.getBlogById(blog.getId()).isPresent());
+		blogDao.deleteBlogById(blog.get_id());
+		Assert.assertTrue(blogDao.deleteBlogById(blog.get_id()));
+		Assert.assertFalse(blogDao.getBlogById(blog.get_id()).isPresent());
 	}
 	
 	@Test
 	public void getFavouriteBlogsByIdTest() {
 		String userId = UUID.randomUUID().toString();
-		Blog blog = new Blog("My First favorite blog","Some content",userId);
+		Post blog = new Post("My First favorite blog","Some content",userId);
 		blogDao.createBlog(blog);
-		blogDao.setFavourite(blog.getId(), true);
+		blogDao.setFavourite(blog.get_id(), true);
 		Assert.assertEquals(1, blogDao.getFavouriteBlogs(userId).size());
 		Assert.assertEquals(blog.getTitle(), blogDao.getFavouriteBlogs(userId).get(0).getTitle());
 		
-		Blog blog2 = new Blog("My Second favorite blog","Some content",userId);
+		Post blog2 = new Post("My Second favorite blog","Some content",userId);
 		blogDao.createBlog(blog2);
-		blogDao.setFavourite(blog2.getId(), true);
+		blogDao.setFavourite(blog2.get_id(), true);
 		Assert.assertEquals(2, blogDao.getFavouriteBlogs(userId).size());
 		
-		blogDao.deleteBlogById(blog.getId());
-		Assert.assertTrue(blogDao.deleteBlogById(blog.getId()));
-		Assert.assertFalse(blogDao.getBlogById(blog.getId()).isPresent());
+		blogDao.deleteBlogById(blog.get_id());
+		Assert.assertTrue(blogDao.deleteBlogById(blog.get_id()));
+		Assert.assertFalse(blogDao.getBlogById(blog.get_id()).isPresent());
 		
-		blogDao.deleteBlogById(blog2.getId());
-		Assert.assertTrue(blogDao.deleteBlogById(blog2.getId()));
-		Assert.assertFalse(blogDao.getBlogById(blog2.getId()).isPresent());
+		blogDao.deleteBlogById(blog2.get_id());
+		Assert.assertTrue(blogDao.deleteBlogById(blog2.get_id()));
+		Assert.assertFalse(blogDao.getBlogById(blog2.get_id()).isPresent());
 	}
 	
 	@Test
 	public void getBlogByTitleTest() {
 		String userId = "test";
-		Blog blog = new Blog(UUID.randomUUID().toString(),"Some content",userId);
+		Post blog = new Post(UUID.randomUUID().toString(),"Some content",userId);
 		blogDao.createBlog(blog);
-		List<Blog> blogsByTitle = blogDao.getBlogsByTitle(blog.getTitle().substring(blog.getTitle().indexOf("-"), blog.getTitle().length()),userId);
+		List<Post> blogsByTitle = blogDao.getBlogsByTitle(blog.getTitle().substring(blog.getTitle().indexOf("-"), blog.getTitle().length()),userId);
 		Assert.assertEquals(1, blogsByTitle.size());
 		
-		Blog blog2 = new Blog(UUID.randomUUID().toString()+blog.getTitle(),"Some content","test");
+		Post blog2 = new Post(UUID.randomUUID().toString()+blog.getTitle(),"Some content","test");
 		blogDao.createBlog(blog2);
 		blogsByTitle = blogDao.getBlogsByTitle(blog.getTitle().substring(blog.getTitle().indexOf("-"), blog.getTitle().length()),userId);
 		Assert.assertEquals(2, blogsByTitle.size());
 		
-		blogDao.deleteBlogById(blog.getId());
-		Assert.assertTrue(blogDao.deleteBlogById(blog.getId()));
-		Assert.assertFalse(blogDao.getBlogById(blog.getId()).isPresent());
+		blogDao.deleteBlogById(blog.get_id());
+		Assert.assertTrue(blogDao.deleteBlogById(blog.get_id()));
+		Assert.assertFalse(blogDao.getBlogById(blog.get_id()).isPresent());
 		
-		blogDao.deleteBlogById(blog2.getId());
-		Assert.assertTrue(blogDao.deleteBlogById(blog2.getId()));
-		Assert.assertFalse(blogDao.getBlogById(blog2.getId()).isPresent());
+		blogDao.deleteBlogById(blog2.get_id());
+		Assert.assertTrue(blogDao.deleteBlogById(blog2.get_id()));
+		Assert.assertFalse(blogDao.getBlogById(blog2.get_id()).isPresent());
 	}
 	
 	@Test
 	public void getAllBlogs() {
-		List<Blog> allBlogs = blogDao.getAllBlogs();
+		List<Post> allBlogs = blogDao.getAllBlogs();
 		logger.info("blogs : "+allBlogs);
 	}
 	
